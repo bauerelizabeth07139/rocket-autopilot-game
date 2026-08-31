@@ -18,6 +18,7 @@ ROCKET_HALF_H = 23.0       # distance from rocket centre to engine nozzle
 
 # --- autopilot gains -------------------------------------------------------
 AP_MAX_ACCEL = 240.0       # cap on desired acceleration
+AP_MAX_SPEED = 320.0       # speed limiter for transit phases
 AP_POS_KP = 2.4
 AP_VEL_KD = 3.4
 AP_SAFE_HEIGHT = 150.0     # cruise height above a landing site

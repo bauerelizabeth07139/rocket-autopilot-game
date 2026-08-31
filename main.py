@@ -25,7 +25,7 @@ def restart(rocket, ap, world):
     ap.to_manual()
 
 
-def main():
+def main(demo=None, demo_mode="dock"):
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption(TITLE)
@@ -39,6 +39,7 @@ def main():
     result = None            # last game outcome
     state = "playing"        # "playing" | "finished"
     t = 0.0
+    demo_engaged = False
 
     while True:
         dt = clock.tick(FPS) / 1000.0
@@ -57,6 +58,11 @@ def main():
                     restart(rocket, ap, world)
 
         keys = pygame.key.get_pressed()
+
+        # --- demo mode: engage an autopilot automatically ----------------
+        if demo and not demo_engaged and t > 0.1:
+            demo_engaged = True
+            ap.engage(demo)
 
         # --- autopilot mode switching -----------------------------------
         if keys[pygame.K_h]:
@@ -143,7 +149,18 @@ def outcome_text(result):
 
 
 if __name__ == "__main__":
-    if "--selftest" in sys.argv:
+    args = sys.argv[1:]
+    if "--selftest" in args:
         from game.selftest import run
         sys.exit(run())
-    sys.exit(main())
+    demo = None
+    if "--demo" in args:
+        mode = "dock"
+        for a in args:
+            if a.startswith("--mode="):
+                mode = a.split("=", 1)[1]
+        demo = {"hover": Autopilot.MODE_HOVER,
+                "land": Autopilot.MODE_LAND,
+                "moon": Autopilot.MODE_MOON,
+                "dock": Autopilot.MODE_DOCK}.get(mode, Autopilot.MODE_DOCK)
+    sys.exit(main(demo=demo))

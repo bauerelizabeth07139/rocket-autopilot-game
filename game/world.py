@@ -22,10 +22,3 @@ class World:
         """True when the ship's centre has hit the moon's body."""
         mx, my, mr = self.moon
         return math.hypot(x - mx, y - my) < mr - 8.0
-
-    def surface_y_at(self, x):
-        """Solid surface height below a given x: moon platform or ground."""
-        mx, _, mr = self.moon
-        if abs(x - mx) < mr - 8.0:
-            return self.moon_top()
-        return self.ground_y

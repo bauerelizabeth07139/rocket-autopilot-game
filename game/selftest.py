@@ -80,9 +80,9 @@ def run():
     out = simulate((900, 620), Autopilot.MODE_MOON, max_seconds=90.0)
     record("moon landing", out == "landed_moon", f"-> {out}")
 
-    # 4. auto dock with the space station
-    out = simulate((920, 320), Autopilot.MODE_DOCK, max_seconds=60.0)
-    record("auto dock", out == "docked", f"-> {out}")
+    # 4. auto dock with the space station, from far away (long transit)
+    out = simulate((300, 300), Autopilot.MODE_DOCK, max_seconds=90.0)
+    record("auto dock (distant)", out == "docked", f"-> {out}")
 
     passed = sum(1 for _, ok, _ in results if ok)
     total = len(results)

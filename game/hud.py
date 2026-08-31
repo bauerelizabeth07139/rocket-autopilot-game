@@ -165,9 +165,7 @@ def draw_hud(screen, rocket, ap, fuel_warn, result=None):
         y += 26
 
     # bottom help bar
-    help_lines = (
-        "W/UP thrust   A/D or LEFT/RIGHT rotate   H hover   L auto land   P moon   D dock   SPACE manual   R restart   ESC quit",
-    )
+    help_lines = "W/UP thrust   A/D or LEFT/RIGHT rotate   H hover   L auto land   P moon   D dock   SPACE manual   R restart   ESC quit"
     bar = fonts.font(16).render(help_lines, True, (150, 160, 175))
     screen.blit(bar, (C.WIDTH // 2 - bar.get_width() // 2, C.HEIGHT - 26))
 

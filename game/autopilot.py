@@ -130,6 +130,13 @@ class Autopilot:
             ax *= s
             ay *= s
 
+        # speed limiter: long transits must not overshoot the target
+        speed = math.hypot(r.vx, r.vy)
+        if speed > C.AP_MAX_SPEED and speed > 1e-6:
+            k = (speed - C.AP_MAX_SPEED) * 1.6
+            ax += -r.vx / speed * k
+            ay += -r.vy / speed * k
+
         # engine acceleration needed to produce that net acceleration
         ex, ey = ax, ay - C.GRAVITY
         m = math.hypot(ex, ey)

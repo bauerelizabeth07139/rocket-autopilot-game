@@ -38,8 +38,14 @@ def resolve_contact(rocket, world, ap):
     if rocket.vy <= 0.0:
         return None
 
-    surface = world.surface_y_at(rocket.x)
-    if rocket.bottom_y() < surface:
+    bottom = rocket.bottom_y()
+    mx, my, mr = world.moon
+    in_moon_x = abs(rocket.x - mx) < mr - 8.0
+    if in_moon_x and rocket.y < my and bottom >= world.moon_top():
+        surface = world.moon_top()
+    elif bottom >= world.ground_y:
+        surface = world.ground_y
+    else:
         return None
 
     # touchdown
