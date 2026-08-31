@@ -1,4 +1,7 @@
-"""Rocket physics: position, velocity, attitude, fuel, thrust."""
+"""Rocket physics: position, velocity, attitude, fuel, thrust.
+
+Supports variable gravity from gravity wells (solar system scale).
+"""
 
 import math
 
@@ -36,7 +39,15 @@ class Rocket:
         return math.hypot(self.vx, self.vy)
 
     # -- integration ---------------------------------------------------------
-    def step(self, dt, thrust_frac, ang_accel):
+    def step(self, dt, thrust_frac, ang_accel, world):
+        """Update rocket state.
+
+        Args:
+            dt: time step (already multiplied by time scale)
+            thrust_frac: 0..1 thrust level
+            ang_accel: angular acceleration in deg/s^2
+            world: World object with gravity wells
+        """
         # attitude
         self.ang_vel = clamp(self.ang_vel + ang_accel * dt,
                              -C.MAX_ANG_VEL, C.MAX_ANG_VEL)
@@ -53,8 +64,12 @@ class Rocket:
             self.vy += ty * a * dt
             self.fuel = max(0.0, self.fuel - C.FUEL_BURN_RATE * self.thrust_frac * dt)
 
-        # gravity and integration
-        self.vy += C.GRAVITY * dt
+        # gravity from all planets (variable gravity)
+        gx, gy = world.get_total_gravity(self.x, self.y)
+        self.vx += gx * dt
+        self.vy += gy * dt
+
+        # integrate position
         self.x += self.vx * dt
         self.y += self.vy * dt
 
